@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>爱心问候💗</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:#000;
+  overflow:hidden;
+  font-family:微软雅黑;
+}
+.box{
+  position:absolute;
+  width:130px;
+  height:60px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  opacity:0;
+  transform:scale(0.6);
+  transition:all 0.5s ease;
+}
+</style>
+</head>
+<body>
+<script>
+// 文案
+let textArr = [
+  "我想你了",
+  "天天开心",
+  "平安喜乐",
+  "万事胜意",
+  "温柔以待",
+  "生活可爱",
+  "一直陪着你",
+  "愿你安好"
+];
+// 浅柔和颜色 不深不刺眼
+let colorArr = [
+  "#FFC0CB","#FFD1DC","#87CEFA",
+  "#ADD8E6","#98FB98","#F5F5DC",
+  "#E6E6FA","#FFEFD5"
+];
+
+let count = 65;   // 数量刚好 不密集
+let scale = 18;   // 爱心大小 手机刚好居中
+let arr = [];
+let w = window.innerWidth;
+let h = window.innerHeight;
+let cx = w/2;
+let cy = h/2;
+
+// 爱心坐标
+function getHeart(t){
+  let x = 16 * Math.sin(t)**3;
+  let y = 13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
+  return {x:x*scale, y:-y*scale};
+}
+
+// 创建小窗
+for(let i=0;i<count;i++){
+  let div = document.createElement('div');
+  div.className = 'box';
+  div.style.background = colorArr[Math.floor(Math.random()*colorArr.length)];
+  div.innerText = textArr[Math.floor(Math.random()*textArr.length)];
+  document.body.appendChild(div);
+  arr.push(div);
+}
+
+// 动画开始
+async function run(){
+  // 排成爱心 居中
+  for(let i=0;i<count;i++){
+    let t = i*0.1;
+    let p = getHeart(t);
+    arr[i].style.left = cx + p.x - 65 + 'px';
+    arr[i].style.top = cy + p.y - 30 + 'px';
+    arr[i].style.opacity = 1;
+    arr[i].style.transform = 'scale(1)';
+    await new Promise(r=>setTimeout(r,30));
+  }
+
+  // 停留3秒
+  await new Promise(r=>setTimeout(r,3000));
+
+  // 散开满屏
+  for(let i=0;i<count;i++){
+    let l = Math.random()*(w-130);
+    let t = Math.random()*(h-60);
+    arr[i].style.left = l+'px';
+    arr[i].style.top = t+'px';
+    await new Promise(r=>setTimeout(r,15));
+  }
+
+  // 停留再消失
+  await new Promise(r=>setTimeout(r,2000));
+  for(let i=0;i<count;i++){
+    arr[i].style.opacity = 0;
+    await new Promise(r=>setTimeout(r,8));
+  }
+}
+run();
+</script>
+</body>
+</html>
